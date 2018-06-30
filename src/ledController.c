@@ -20,6 +20,7 @@ void tapTurnOnTapOffLed(LedButtonInfo *info){
       info->currrentState = LED_ON ;
       turnLed(info->currrentState);
     }else{
+      info->previousButtonState =  BUTTON_RELEASED;
     }
   }
   else

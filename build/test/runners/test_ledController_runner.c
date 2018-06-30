@@ -42,6 +42,8 @@ extern void test_turnLedIfButtonIsPressed_given_button_ON_expect_led_ON(void);
 extern void test_turnLedIfButtonIsPressed_given_button_off_expect_led_OFF(void);
 extern void test_tapTurnOnTapOffLed_given_led_is_off_and_button_is_pressed_and_release_expect_led_ON(void);
 extern void test_tapTurnOnTapOffLed_given_led_is_ON_and_button_is_pressed_and_release_expect_led_OFF(void);
+extern void test_tapTurnOnTapOffLed_given_led_is_ON_and_button_is_pressed_and_release_expect_led_OFF_2_times(void);
+extern void test_tapTurnOnTapOffLed_given_led_is_ON_and_button_is_pressed_and_release_expect_led_OFF_keep_pressing(void);
 
 
 /*=======Mock Management=====*/
@@ -84,7 +86,9 @@ int main(void)
   RUN_TEST(test_turnLedIfButtonIsPressed_given_button_ON_expect_led_ON, 24);
   RUN_TEST(test_turnLedIfButtonIsPressed_given_button_off_expect_led_OFF, 32);
   RUN_TEST(test_tapTurnOnTapOffLed_given_led_is_off_and_button_is_pressed_and_release_expect_led_ON, 40);
-  RUN_TEST(test_tapTurnOnTapOffLed_given_led_is_ON_and_button_is_pressed_and_release_expect_led_OFF, 58);
+  RUN_TEST(test_tapTurnOnTapOffLed_given_led_is_ON_and_button_is_pressed_and_release_expect_led_OFF, 57);
+  RUN_TEST(test_tapTurnOnTapOffLed_given_led_is_ON_and_button_is_pressed_and_release_expect_led_OFF_2_times, 73);
+  RUN_TEST(test_tapTurnOnTapOffLed_given_led_is_ON_and_button_is_pressed_and_release_expect_led_OFF_keep_pressing, 109);
 
   CMock_Guts_MemFreeFinal();
   return (UnityEnd());
