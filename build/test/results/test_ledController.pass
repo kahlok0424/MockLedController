@@ -1,0 +1,28 @@
+---
+:source:
+  :path: test
+  :file: test_ledController.c
+:successes:
+- :test: test_LedController_given_button_expect_led
+  :line: 14
+  :message: ''
+- :test: test_turnLedIfButtonIsPressed_given_button_ON_expect_led_ON
+  :line: 24
+  :message: ''
+- :test: test_turnLedIfButtonIsPressed_given_button_off_expect_led_OFF
+  :line: 32
+  :message: ''
+- :test: test_tapTurnOnTapOffLed_given_led_is_off_and_button_is_pressed_and_release_expect_led_ON
+  :line: 40
+  :message: ''
+- :test: test_tapTurnOnTapOffLed_given_led_is_ON_and_button_is_pressed_and_release_expect_led_OFF
+  :line: 58
+  :message: ''
+:failures: []
+:ignores: []
+:counts:
+  :total: 5
+  :passed: 5
+  :failed: 0
+  :ignored: 0
+:stdout: []
