@@ -24,11 +24,14 @@
 - :test: test_tapTurnOnTapOffLed_given_led_is_ON_and_button_is_pressed_and_release_expect_led_OFF_keep_pressing
   :line: 109
   :message: ''
-:failures: []
+:failures:
+- :test: test_tapTurnOnTapOffLed_given_led_is_off_and_button_is_pressed_and_release_expect_led_ON_in_loop
+  :line: 154
+  :message: Function getButtonState.  Called earlier than expected.
 :ignores: []
 :counts:
-  :total: 7
+  :total: 8
   :passed: 7
-  :failed: 0
+  :failed: 1
   :ignored: 0
 :stdout: []
