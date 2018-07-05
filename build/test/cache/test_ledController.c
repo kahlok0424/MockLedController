@@ -5,6 +5,26 @@
 #include "unity.h"
 
 
+int turnLedCallNumbers = 0;
+
+int getButtonStateMaxCalls = 0;
+
+int expectedTurnLedMaxCalls = 0;
+
+buttonState *expectedbuttonState = 
+
+                                  ((void *)0)
+
+                                      ;
+
+ledState *expectedLedStates = 
+
+                             ((void *)0)
+
+                                 ;
+
+
+
 void setUp(void)
 
 {
@@ -21,53 +41,69 @@ void tearDown(void)
 
 
 
-void test_LedController_given_button_expect_led(void)
+void fake_turnLed(ledState state ,int NumCalls ){
 
-{
+  turnLedCallNumbers++;
 
-  getButtonState_CMockExpectAndReturn(16, 23);
+  if(NumCalls < expectedTurnLedMaxCalls){
 
-  getButtonState_CMockExpectAndReturn(17, 0);
+    if(state != expectedLedStates[NumCalls]){
 
+      UnityFail( (("turnLed() was called with ???,but expect ???")), (UNITY_UINT)(24));
 
+    }
 
-  int ledstate = getButtonState();
+  }else
 
-  int ledstate2 = getButtonState();
-
-
-
-}
-
-
-
-void test_turnLedIfButtonIsPressed_given_button_ON_expect_led_ON(void)
-
-{
-
-  getButtonState_CMockExpectAndReturn(26, BUTTON_PRESSED);
-
-  turnLed_CMockExpect(27, LED_ON);
-
-
-
-  turnLedIfButtonIsPressed();
+  UnityFail( (("turnLed() was called with ???,but expect ???")), (UNITY_UINT)(27));
 
 }
 
 
 
-void test_turnLedIfButtonIsPressed_given_button_off_expect_led_OFF(void)
+buttonState fake_getButtonState(int NumCalls){
 
-{
+  if(NumCalls < getButtonStateMaxCalls){
 
-  getButtonState_CMockExpectAndReturn(34, BUTTON_RELEASED);
+    return expectedbuttonState[NumCalls];
 
-  turnLed_CMockExpect(35, LED_OFF);
+  }
+
+  else{
+
+    UnityFail( (("Received extra getButtonState() calls")), (UNITY_UINT)(35));
+
+  }
+
+}
+
+void setupFake(ledState expLedStates[] , int ledMaxCalls , buttonState buttStates[], int buttonMaxCalls){
+
+  turnLedCallNumbers = 0;
+
+  turnLed_StubWithCallback(fake_turnLed);
+
+  expectedLedStates = expLedStates;
+
+  expectedTurnLedMaxCalls = ledMaxCalls;
+
+  getButtonState_StubWithCallback(fake_getButtonState);
+
+  expectedbuttonState = buttStates;
+
+  getButtonStateMaxCalls = buttonMaxCalls;
+
+}
 
 
 
-  turnLedIfButtonIsPressed();
+void verifyturnLedCalls(int numCalls){
+
+  if(turnLedCallNumbers != numCalls){
+
+    UnityFail( (("turnled() was not called at all. but 1 call is expected")), (UNITY_UINT)(50));
+
+  }
 
 }
 
@@ -81,21 +117,25 @@ void test_tapTurnOnTapOffLed_given_led_is_off_and_button_is_pressed_and_release_
 
   LedButtonInfo info= {LED_OFF,BUTTON_RELEASED};
 
+  ledState expectedLedStates[] = {LED_ON};
+
+  buttonState buttonStates[] = {BUTTON_RELEASED , BUTTON_PRESSED , BUTTON_RELEASED};
 
 
-  getButtonState_CMockExpectAndReturn(45, BUTTON_RELEASED);
+
+  setupFake(expectedLedStates,1,buttonStates,3);
+
+
+
+  tapTurnOnTapOffLed(&info);
 
   tapTurnOnTapOffLed(&info);
 
-  getButtonState_CMockExpectAndReturn(47, BUTTON_PRESSED);
-
-  turnLed_CMockExpect(48, LED_ON);
-
   tapTurnOnTapOffLed(&info);
 
-  getButtonState_CMockExpectAndReturn(50, BUTTON_RELEASED);
 
-  tapTurnOnTapOffLed(&info);
+
+  verifyturnLedCalls(1);
 
 
 
@@ -103,15 +143,13 @@ void test_tapTurnOnTapOffLed_given_led_is_off_and_button_is_pressed_and_release_
 
  ((void *)0)
 
- ), (UNITY_UINT)(53), UNITY_DISPLAY_STYLE_INT);
-
-
+ ), (UNITY_UINT)(69), UNITY_DISPLAY_STYLE_INT);
 
 }
 
 
 
-void test_tapTurnOnTapOffLed_given_led_is_ON_and_button_is_pressed_and_release_expect_led_OFF(void)
+void test_tapTurnOnTapOffLed_given_led_is_off_and_button_is_pressed_and_release_expect_led_FAKE(void)
 
 {
 
@@ -119,21 +157,25 @@ void test_tapTurnOnTapOffLed_given_led_is_ON_and_button_is_pressed_and_release_e
 
   LedButtonInfo info= {LED_ON,BUTTON_RELEASED};
 
+  ledState expectedLedStates[] = {LED_OFF};
+
+  buttonState buttonStates[] = {BUTTON_RELEASED , BUTTON_PRESSED , BUTTON_RELEASED};
 
 
-  getButtonState_CMockExpectAndReturn(62, BUTTON_RELEASED);
+
+  setupFake(expectedLedStates,1,buttonStates,3);
+
+
+
+  tapTurnOnTapOffLed(&info);
 
   tapTurnOnTapOffLed(&info);
 
-  getButtonState_CMockExpectAndReturn(64, BUTTON_PRESSED);
-
   tapTurnOnTapOffLed(&info);
 
-  getButtonState_CMockExpectAndReturn(66, BUTTON_RELEASED);
 
-  turnLed_CMockExpect(67, LED_OFF);
 
-  tapTurnOnTapOffLed(&info);
+  verifyturnLedCalls(1);
 
 
 
@@ -141,216 +183,6 @@ void test_tapTurnOnTapOffLed_given_led_is_ON_and_button_is_pressed_and_release_e
 
  ((void *)0)
 
- ), (UNITY_UINT)(70), UNITY_DISPLAY_STYLE_INT);
-
-}
-
-
-
-void test_tapTurnOnTapOffLed_given_led_is_ON_and_button_is_pressed_and_release_expect_led_OFF_2_times(void)
-
-{
-
-
-
-  LedButtonInfo info= {LED_ON,BUTTON_RELEASED};
-
-
-
-  getButtonState_CMockExpectAndReturn(78, BUTTON_RELEASED);
-
-  tapTurnOnTapOffLed(&info);
-
-  getButtonState_CMockExpectAndReturn(80, BUTTON_PRESSED);
-
-  tapTurnOnTapOffLed(&info);
-
-  getButtonState_CMockExpectAndReturn(82, BUTTON_RELEASED);
-
-  turnLed_CMockExpect(83, LED_OFF);
-
-  tapTurnOnTapOffLed(&info);
-
-
-
-  UnityAssertEqualNumber((UNITY_INT)((LED_OFF)), (UNITY_INT)((info.currrentState)), (
-
- ((void *)0)
-
- ), (UNITY_UINT)(86), UNITY_DISPLAY_STYLE_INT);
-
-
-
-  getButtonState_CMockExpectAndReturn(88, BUTTON_RELEASED);
-
-  tapTurnOnTapOffLed(&info);
-
-  getButtonState_CMockExpectAndReturn(90, BUTTON_PRESSED);
-
-  turnLed_CMockExpect(91, LED_ON);
-
-  tapTurnOnTapOffLed(&info);
-
-  getButtonState_CMockExpectAndReturn(93, BUTTON_RELEASED);
-
-  tapTurnOnTapOffLed(&info);
-
-
-
-  UnityAssertEqualNumber((UNITY_INT)((LED_ON)), (UNITY_INT)((info.currrentState)), (
-
- ((void *)0)
-
- ), (UNITY_UINT)(96), UNITY_DISPLAY_STYLE_INT);
-
-
-
-  getButtonState_CMockExpectAndReturn(98, BUTTON_RELEASED);
-
-  tapTurnOnTapOffLed(&info);
-
-  getButtonState_CMockExpectAndReturn(100, BUTTON_PRESSED);
-
-  tapTurnOnTapOffLed(&info);
-
-  getButtonState_CMockExpectAndReturn(102, BUTTON_RELEASED);
-
-  turnLed_CMockExpect(103, LED_OFF);
-
-  tapTurnOnTapOffLed(&info);
-
-
-
-  UnityAssertEqualNumber((UNITY_INT)((LED_OFF)), (UNITY_INT)((info.currrentState)), (
-
- ((void *)0)
-
- ), (UNITY_UINT)(106), UNITY_DISPLAY_STYLE_INT);
-
-}
-
-
-
-void test_tapTurnOnTapOffLed_given_led_is_ON_and_button_is_pressed_and_release_expect_led_OFF_keep_pressing(void)
-
-{
-
-
-
-  LedButtonInfo info= {LED_ON,BUTTON_RELEASED};
-
-
-
-  getButtonState_CMockExpectAndReturn(114, BUTTON_RELEASED);
-
-  tapTurnOnTapOffLed(&info);
-
-  getButtonState_CMockExpectAndReturn(116, BUTTON_RELEASED);
-
-  tapTurnOnTapOffLed(&info);
-
-  getButtonState_CMockExpectAndReturn(118, BUTTON_RELEASED);
-
-  tapTurnOnTapOffLed(&info);
-
-  getButtonState_CMockExpectAndReturn(120, BUTTON_PRESSED);
-
-  tapTurnOnTapOffLed(&info);
-
-  getButtonState_CMockExpectAndReturn(122, BUTTON_PRESSED);
-
-  tapTurnOnTapOffLed(&info);
-
-  getButtonState_CMockExpectAndReturn(124, BUTTON_PRESSED);
-
-  tapTurnOnTapOffLed(&info);
-
-  getButtonState_CMockExpectAndReturn(126, BUTTON_RELEASED);
-
-  turnLed_CMockExpect(127, LED_OFF);
-
-  tapTurnOnTapOffLed(&info);
-
-  getButtonState_CMockExpectAndReturn(129, BUTTON_RELEASED);
-
-  tapTurnOnTapOffLed(&info);
-
-  getButtonState_CMockExpectAndReturn(131, BUTTON_RELEASED);
-
-  tapTurnOnTapOffLed(&info);
-
-
-
-  UnityAssertEqualNumber((UNITY_INT)((LED_OFF)), (UNITY_INT)((info.currrentState)), (
-
- ((void *)0)
-
- ), (UNITY_UINT)(134), UNITY_DISPLAY_STYLE_INT);
-
-}
-
-
-
-void test_tapTurnOnTapOffLed_given_led_is_off_and_button_is_pressed_and_release_expect_led_ON_in_loop(void)
-
-{
-
-
-
-  LedButtonInfo info= {LED_OFF,BUTTON_RELEASED};
-
-
-
-  getButtonState_CMockExpectAndReturn(142, BUTTON_RELEASED);
-
-  tapTurnOnTapOffLed(&info);
-
-  getButtonState_CMockExpectAndReturn(144, BUTTON_RELEASED);
-
-  tapTurnOnTapOffLed(&info);
-
-  getButtonState_CMockExpectAndReturn(146, BUTTON_RELEASED);
-
-  tapTurnOnTapOffLed(&info);
-
-  getButtonState_CMockExpectAndReturn(148, BUTTON_PRESSED);
-
-  turnLed_CMockExpect(149, LED_ON);
-
-  tapTurnOnTapOffLed(&info);
-
-  getButtonState_CMockExpectAndReturn(151, BUTTON_PRESSED);
-
-  turnLed_CMockExpect(152, LED_ON);
-
-  tapTurnOnTapOffLed(&info);
-
-  getButtonState_CMockExpectAndReturn(154, BUTTON_PRESSED);
-
-  turnLed_CMockExpect(155, LED_ON);
-
-  tapTurnOnTapOffLed(&info);
-
-  getButtonState_CMockExpectAndReturn(157, BUTTON_RELEASED);
-
-  tapTurnOnTapOffLed(&info);
-
-  getButtonState_CMockExpectAndReturn(159, BUTTON_RELEASED);
-
-  tapTurnOnTapOffLed(&info);
-
-  getButtonState_CMockExpectAndReturn(161, BUTTON_RELEASED);
-
-  tapTurnOnTapOffLed(&info);
-
-
-
-  UnityAssertEqualNumber((UNITY_INT)((LED_ON)), (UNITY_INT)((info.currrentState)), (
-
- ((void *)0)
-
- ), (UNITY_UINT)(164), UNITY_DISPLAY_STYLE_INT);
-
-
+ ), (UNITY_UINT)(87), UNITY_DISPLAY_STYLE_INT);
 
 }

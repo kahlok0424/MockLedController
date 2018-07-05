@@ -1,0 +1,19 @@
+---
+:source:
+  :path: test
+  :file: test_ledController.c
+:successes:
+- :test: test_tapTurnOnTapOffLed_given_led_is_off_and_button_is_pressed_and_release_expect_led_ON
+  :line: 54
+  :message: ''
+- :test: test_tapTurnOnTapOffLed_given_led_is_off_and_button_is_pressed_and_release_expect_led_FAKE
+  :line: 72
+  :message: ''
+:failures: []
+:ignores: []
+:counts:
+  :total: 2
+  :passed: 2
+  :failed: 0
+  :ignored: 0
+:stdout: []

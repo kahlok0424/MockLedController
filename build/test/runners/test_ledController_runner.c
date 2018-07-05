@@ -37,14 +37,8 @@ char* GlobalOrderError;
 /*=======External Functions This Runner Calls=====*/
 extern void setUp(void);
 extern void tearDown(void);
-extern void test_LedController_given_button_expect_led(void);
-extern void test_turnLedIfButtonIsPressed_given_button_ON_expect_led_ON(void);
-extern void test_turnLedIfButtonIsPressed_given_button_off_expect_led_OFF(void);
 extern void test_tapTurnOnTapOffLed_given_led_is_off_and_button_is_pressed_and_release_expect_led_ON(void);
-extern void test_tapTurnOnTapOffLed_given_led_is_ON_and_button_is_pressed_and_release_expect_led_OFF(void);
-extern void test_tapTurnOnTapOffLed_given_led_is_ON_and_button_is_pressed_and_release_expect_led_OFF_2_times(void);
-extern void test_tapTurnOnTapOffLed_given_led_is_ON_and_button_is_pressed_and_release_expect_led_OFF_keep_pressing(void);
-extern void test_tapTurnOnTapOffLed_given_led_is_off_and_button_is_pressed_and_release_expect_led_ON_in_loop(void);
+extern void test_tapTurnOnTapOffLed_given_led_is_off_and_button_is_pressed_and_release_expect_led_FAKE(void);
 
 
 /*=======Mock Management=====*/
@@ -83,14 +77,8 @@ void resetTest(void)
 int main(void)
 {
   UnityBegin("test_ledController.c");
-  RUN_TEST(test_LedController_given_button_expect_led, 14);
-  RUN_TEST(test_turnLedIfButtonIsPressed_given_button_ON_expect_led_ON, 24);
-  RUN_TEST(test_turnLedIfButtonIsPressed_given_button_off_expect_led_OFF, 32);
-  RUN_TEST(test_tapTurnOnTapOffLed_given_led_is_off_and_button_is_pressed_and_release_expect_led_ON, 40);
-  RUN_TEST(test_tapTurnOnTapOffLed_given_led_is_ON_and_button_is_pressed_and_release_expect_led_OFF, 57);
-  RUN_TEST(test_tapTurnOnTapOffLed_given_led_is_ON_and_button_is_pressed_and_release_expect_led_OFF_2_times, 73);
-  RUN_TEST(test_tapTurnOnTapOffLed_given_led_is_ON_and_button_is_pressed_and_release_expect_led_OFF_keep_pressing, 109);
-  RUN_TEST(test_tapTurnOnTapOffLed_given_led_is_off_and_button_is_pressed_and_release_expect_led_ON_in_loop, 137);
+  RUN_TEST(test_tapTurnOnTapOffLed_given_led_is_off_and_button_is_pressed_and_release_expect_led_ON, 54);
+  RUN_TEST(test_tapTurnOnTapOffLed_given_led_is_off_and_button_is_pressed_and_release_expect_led_FAKE, 72);
 
   CMock_Guts_MemFreeFinal();
   return (UnityEnd());
