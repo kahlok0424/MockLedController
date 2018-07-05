@@ -3,17 +3,17 @@
   :path: test
   :file: test_ledController.c
 :successes:
-- :test: test_tapTurnOnTapOffLed_given_led_is_off_and_button_is_pressed_and_release_expect_led_ON
-  :line: 54
-  :message: ''
 - :test: test_tapTurnOnTapOffLed_given_led_is_off_and_button_is_pressed_and_release_expect_led_FAKE
-  :line: 72
+  :line: 115
   :message: ''
-:failures: []
+:failures:
+- :test: test_tapTurnOnTapOffLed_given_led_is_off_and_button_is_pressed_and_release_expect_led_ON
+  :line: 64
+  :message: Function turnLed.  turnLed() was called with LED_ON ,but expect LED_OFF
 :ignores: []
 :counts:
   :total: 2
-  :passed: 2
-  :failed: 0
+  :passed: 1
+  :failed: 1
   :ignored: 0
 :stdout: []

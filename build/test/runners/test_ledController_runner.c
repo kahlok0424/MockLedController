@@ -77,8 +77,8 @@ void resetTest(void)
 int main(void)
 {
   UnityBegin("test_ledController.c");
-  RUN_TEST(test_tapTurnOnTapOffLed_given_led_is_off_and_button_is_pressed_and_release_expect_led_ON, 54);
-  RUN_TEST(test_tapTurnOnTapOffLed_given_led_is_off_and_button_is_pressed_and_release_expect_led_FAKE, 72);
+  RUN_TEST(test_tapTurnOnTapOffLed_given_led_is_off_and_button_is_pressed_and_release_expect_led_ON, 97);
+  RUN_TEST(test_tapTurnOnTapOffLed_given_led_is_off_and_button_is_pressed_and_release_expect_led_FAKE, 115);
 
   CMock_Guts_MemFreeFinal();
   return (UnityEnd());

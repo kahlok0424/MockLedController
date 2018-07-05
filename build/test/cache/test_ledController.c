@@ -5,6 +5,10 @@
 #include "unity.h"
 
 
+
+
+
+
 int turnLedCallNumbers = 0;
 
 int getButtonStateMaxCalls = 0;
@@ -41,21 +45,125 @@ void tearDown(void)
 
 
 
+
+
+char *createMsg(char *format,...){
+
+  va_list valist;
+
+  int neededSize;
+
+  char *buffer;
+
+
+
+  
+
+ __builtin_va_start(
+
+ valist
+
+ ,
+
+ format
+
+ )
+
+                        ;
+
+  neededSize = vsnprintf(
+
+                        ((void *)0) 
+
+                             , 0 , format , valist) +1;
+
+  buffer = malloc(neededSize);
+
+  vsnprintf(buffer , neededSize ,format,valist);
+
+  
+
+ __builtin_va_end(
+
+ valist
+
+ )
+
+               ;
+
+
+
+  return buffer;
+
+}
+
+
+
+void freeMsg(char *msg){
+
+  if(msg){
+
+    if(msg)
+
+    free(msg);
+
+  }
+
+}
+
+
+
+char *getLedStateName( ledState state){
+
+  switch(state){
+
+    case LED_ON:
+
+    return "LED_ON";
+
+    case LED_OFF:
+
+    return "LED_OFF";
+
+    default:
+
+    return "Unknown LED state";
+
+  }
+
+}
+
+
+
 void fake_turnLed(ledState state ,int NumCalls ){
+
+  char *msg;
 
   turnLedCallNumbers++;
 
   if(NumCalls < expectedTurnLedMaxCalls){
 
-    if(state != expectedLedStates[NumCalls]){
+    ledState expectedState = expectedLedStates[NumCalls];
 
-      UnityFail( (("turnLed() was called with ???,but expect ???")), (UNITY_UINT)(24));
+    if(state != expectedState){
+
+      msg = createMsg("turnLed() was called with %s ,but expect %s", getLedStateName(state),
+
+      getLedStateName(expectedLedStates[NumCalls]));
+
+      UnityFail( ((msg)), (UNITY_UINT)(64));
 
     }
 
-  }else
+  }else{
 
-  UnityFail( (("turnLed() was called with ???,but expect ???")), (UNITY_UINT)(27));
+    msg = createMsg("turned(%s) was called more times than expected", getLedStateName(state),
+
+    getLedStateName(expectedLedStates[NumCalls]));;
+
+    UnityFail( ((msg)), (UNITY_UINT)(69));
+
+}
 
 }
 
@@ -71,7 +179,7 @@ buttonState fake_getButtonState(int NumCalls){
 
   else{
 
-    UnityFail( (("Received extra getButtonState() calls")), (UNITY_UINT)(35));
+    UnityFail( (("Received extra getButtonState() calls")), (UNITY_UINT)(78));
 
   }
 
@@ -101,7 +209,7 @@ void verifyturnLedCalls(int numCalls){
 
   if(turnLedCallNumbers != numCalls){
 
-    UnityFail( (("turnled() was not called at all. but 1 call is expected")), (UNITY_UINT)(50));
+    UnityFail( (("turnled() was not called at all. but 1 call is expected")), (UNITY_UINT)(93));
 
   }
 
@@ -117,7 +225,7 @@ void test_tapTurnOnTapOffLed_given_led_is_off_and_button_is_pressed_and_release_
 
   LedButtonInfo info= {LED_OFF,BUTTON_RELEASED};
 
-  ledState expectedLedStates[] = {LED_ON};
+  ledState expectedLedStates[] = {LED_OFF};
 
   buttonState buttonStates[] = {BUTTON_RELEASED , BUTTON_PRESSED , BUTTON_RELEASED};
 
@@ -143,7 +251,7 @@ void test_tapTurnOnTapOffLed_given_led_is_off_and_button_is_pressed_and_release_
 
  ((void *)0)
 
- ), (UNITY_UINT)(69), UNITY_DISPLAY_STYLE_INT);
+ ), (UNITY_UINT)(112), UNITY_DISPLAY_STYLE_INT);
 
 }
 
@@ -183,6 +291,6 @@ void test_tapTurnOnTapOffLed_given_led_is_off_and_button_is_pressed_and_release_
 
  ((void *)0)
 
- ), (UNITY_UINT)(87), UNITY_DISPLAY_STYLE_INT);
+ ), (UNITY_UINT)(130), UNITY_DISPLAY_STYLE_INT);
 
 }

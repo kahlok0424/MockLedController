@@ -2,6 +2,9 @@
 #include "ledController.h"
 #include "mock_Button.h"
 #include "mock_Led.h"
+#include <stdio.h>
+#include <stdarg.h>
+#include <malloc.h>
 
 int turnLedCallNumbers = 0;
 int getButtonStateMaxCalls = 0;
@@ -17,14 +20,54 @@ void tearDown(void)
 {
 }
 
+
+char *createMsg(char *format,...){
+  va_list valist;
+  int neededSize;
+  char *buffer;
+
+  va_start(valist,format);
+  neededSize = vsnprintf(NULL , 0 , format , valist) +1;
+  buffer = malloc(neededSize);
+  vsnprintf(buffer , neededSize ,format,valist);
+  va_end(valist);
+
+  return buffer;
+}
+
+void freeMsg(char *msg){
+  if(msg){
+    if(msg)
+    free(msg);
+  }
+}
+
+char *getLedStateName( ledState state){
+  switch(state){
+    case LED_ON:
+    return "LED_ON";
+    case LED_OFF:
+    return "LED_OFF";
+    default:
+    return "Unknown LED state";
+  }
+}
+
 void fake_turnLed(ledState state ,int NumCalls ){
+  char *msg;
   turnLedCallNumbers++;
   if(NumCalls < expectedTurnLedMaxCalls){
-    if(state != expectedLedStates[NumCalls]){
-      TEST_FAIL_MESSAGE("turnLed() was called with ???,but expect ???");
+    ledState expectedState = expectedLedStates[NumCalls];
+    if(state != expectedState){
+      msg = createMsg("turnLed() was called with %s ,but expect %s",  getLedStateName(state),    \
+      getLedStateName(expectedLedStates[NumCalls]));
+      TEST_FAIL_MESSAGE(msg);
     }
-  }else
-  TEST_FAIL_MESSAGE("turnLed() was called with ???,but expect ???");
+  }else{
+    msg = createMsg("turned(%s) was called more times than expected",  getLedStateName(state),    \
+    getLedStateName(expectedLedStates[NumCalls]));;
+    TEST_FAIL_MESSAGE(msg);
+}
 }
 
 buttonState fake_getButtonState(int NumCalls){
